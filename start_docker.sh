@@ -9,6 +9,13 @@ ROS_DOMAIN_ID=36
 ROS_MASTER_URI=http://172.17.0.1:11311/
 ROS_IP=172.17.0.1
 
+# Check if the container is already running
+if docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+    echo "Container ${CONTAINER_NAME} is already running. Attaching to it..."
+    docker exec -it ${CONTAINER_NAME} ${COMMAND}
+    exit 0
+fi
+
 # Ensure XAUTHORITY is set
 export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority}
 
