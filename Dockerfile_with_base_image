@@ -1,0 +1,6 @@
+##############################################################################
+##                                 Base Image                               ##
+##############################################################################
+# Ubuntu Jammy 22.04
+FROM andreaszachariae/robotrainer_docker_ros1_bridge:humble-ros1-bridge
+CMD ["bash"]
