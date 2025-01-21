@@ -5,6 +5,7 @@
 # Usage2: Run from cli with ./start_docker "custom command"
 COMMAND=${1:-bash}
 CONTAINER_NAME=robotrainer_bridge
+CONTAINER_TAG=humble-ros1-bridge
 ROS_DOMAIN_ID=36
 ROS_MASTER_URI=http://172.17.0.1:11311/
 ROS_IP=172.17.0.1
@@ -34,5 +35,5 @@ docker run \
     -v $XAUTHORITY:$XAUTHORITY:rw \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     -v /dev:/dev  \
-    ${CONTAINER_NAME}:humble-ros1-bridge \
+    ${CONTAINER_NAME}:${CONTAINER_TAG} \
     ${COMMAND}

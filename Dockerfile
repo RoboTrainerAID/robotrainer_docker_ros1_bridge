@@ -125,4 +125,4 @@ ENTRYPOINT ["/ros_entrypoint.sh"]
 
 # CMD ["ros2", "run", "ros1_bridge", "dynamic_bridge", "--bridge-all-topics"]
 # CMD ros2 run ros1_bridge dynamic_bridge --bridge-all-topics
-CMD /bin/bash
+CMD ["bash"]
