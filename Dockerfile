@@ -37,6 +37,8 @@ RUN groupadd -g "$GID" "$USER"  && \
 # https://docs.ros.org/en/humble/Installation/Alternatives/Ubuntu-Development-Setup.html
 ARG ROS_DISTRO=humble
 
+# RUN apt update && apt upgrade && apt dist-upgrade
+
 RUN apt-get update && apt-get install --no-install-recommends -y \
     software-properties-common \
     curl

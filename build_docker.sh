@@ -7,3 +7,7 @@ docker build \
     --build-arg GID="$(id -g)" \
     -t ${CONTAINER_NAME} \
     .
+
+    # --no-cache \
+    # --progress plain \
+    # --build-arg CACHE_BUST="$(date +%s)" \
