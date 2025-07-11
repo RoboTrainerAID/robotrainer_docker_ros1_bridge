@@ -21,7 +21,7 @@ export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority}
 docker run \
     --name ${CONTAINER_NAME} \
     --privileged \
-    -it \
+    -d \
     --net host \
     --rm \
     -e DISPLAY=${DISPLAY} \
