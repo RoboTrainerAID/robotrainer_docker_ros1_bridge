@@ -35,5 +35,6 @@ docker run \
     -v $XAUTHORITY:$XAUTHORITY:rw \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     -v /dev:/dev  \
+    -v $PWD:/home/docker/bridge_config:ro \
     ${CONTAINER_NAME}:${CONTAINER_TAG} \
     ${COMMAND}

@@ -1,0 +1,79 @@
+# Topic list for ros1_bridge's parameter_bridge.
+#
+# WHY THIS FILE EXISTS
+# --------------------
+# dynamic_bridge has no queue-size option; it takes the library default of 10
+# (`size_t queue_size = 10` in ros1_bridge/bridge.hpp). The Polar H10 driver
+# publishes ECG sample by sample and BLE delivers 10-20 samples in one frame,
+# so 15 messages hit the wire within microseconds. A depth-10 subscription
+# overflows mid-burst and silently discards the rest -- reliability does not
+# help, because KEEP_LAST is allowed to overwrite. Measured on this setup:
+#
+#   driver publishes          131 Hz
+#   subscriber, depth 10       45 Hz   (35 % delivered)
+#   subscriber, depth 100     133 Hz   (100 %)
+#
+# `queue_size` below sets both the ROS 2 subscription depth and the ROS 1
+# publisher queue, which fixes it. Omit the key to get the default of 100.
+#
+# THINGS TO KNOW
+# --------------
+# * Unlike `dynamic_bridge --bridge-all-topics`, ONLY the topics listed here
+#   cross the bridge. Add an entry for anything else you need -- in either
+#   direction, since every entry is bidirectional.
+# * `type` is the ROS 2 type name. `dynamic_bridge --print-pairs` lists every
+#   type that can be bridged at all.
+# * parameter_bridge reads this once at startup, from the ROS 1 parameter
+#   server, so run_parameter_bridge.sh loads it before starting the bridge.
+
+topics:
+
+  # -- Polar H10: high rate, bursty, needs the deep queue -------------------
+  - topic: /biosensors/polar_h10/ecg
+    type: geometry_msgs/msg/PointStamped
+    queue_size: 500
+  # Idle unless publish_acc is true in polar_h10.yaml; listed so that turning
+  # it on needs no bridge change. 200 Hz, so it bursts harder than the ECG.
+  - topic: /biosensors/polar_h10/acc
+    type: geometry_msgs/msg/Vector3Stamped
+    queue_size: 500
+
+  # -- Polar H10: one message per heartbeat or slower ------------------------
+  - topic: /biosensors/polar_h10/heart_rate
+    type: geometry_msgs/msg/PointStamped
+  - topic: /biosensors/polar_h10/rr_interval
+    type: geometry_msgs/msg/PointStamped
+  - topic: /biosensors/polar_h10/rr_interval_filtered
+    type: geometry_msgs/msg/PointStamped
+  - topic: /biosensors/polar_h10/hrv/rmssd
+    type: geometry_msgs/msg/PointStamped
+  - topic: /biosensors/polar_h10/hrv/sdnn
+    type: geometry_msgs/msg/PointStamped
+  - topic: /biosensors/polar_h10/hrv/pnn50
+    type: geometry_msgs/msg/PointStamped
+  - topic: /biosensors/polar_h10/hrv/mean_rr
+    type: geometry_msgs/msg/PointStamped
+  - topic: /biosensors/polar_h10/hrv/mean_hr
+    type: geometry_msgs/msg/PointStamped
+  - topic: /biosensors/polar_h10/hrv/quality
+    type: geometry_msgs/msg/PointStamped
+  - topic: /biosensors/polar_h10/hrv/n_beats
+    type: geometry_msgs/msg/PointStamped
+  - topic: /biosensors/polar_h10/hrv/window_sec
+    type: geometry_msgs/msg/PointStamped
+  - topic: /biosensors/polar_h10/skin_contact
+    type: std_msgs/msg/Bool
+  - topic: /biosensors/polar_h10/battery
+    type: std_msgs/msg/Float32
+  - topic: /biosensors/polar_h10/status
+    type: diagnostic_msgs/msg/DiagnosticArray
+
+  # -- ROS 1 -> ROS 2 --------------------------------------------------------
+  # Nothing is listed here because no ROS 2 node in this setup subscribes to
+  # robot data today. Uncomment or add entries when one does -- e.g. to look
+  # at robot topics with the plotjuggler in the polar container:
+  #
+  # - topic: /base/joint_states
+  #   type: sensor_msgs/msg/JointState
+  # - topic: /scan_unified
+  #   type: sensor_msgs/msg/LaserScan
