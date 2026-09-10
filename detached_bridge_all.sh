@@ -34,4 +34,4 @@ docker run \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     -v /dev:/dev  \
     ${CONTAINER_NAME}:${CONTAINER_TAG} \
-    ros2 run ros1_bridge dynamic_bridge --bridge-all-2to1-topics
+    ros2 run ros1_bridge dynamic_bridge --bridge-all-topics
